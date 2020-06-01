@@ -1,0 +1,17 @@
+body {
+    padding: 1em calc(50% - 300px);
+    font-size: 1.3em;
+}
+.err {
+    color: red;
+}
+input[type="submit"], input[type="reset"] {
+    background: none repeat scroll 0 0 #8C8C69;
+    border: medium none;
+    cursor: pointer;
+    display: inline-block;
+    color: #fff;
+    padding: 7px;
+    margin: 5px 0;
+    text-transform: uppercase;
+}
