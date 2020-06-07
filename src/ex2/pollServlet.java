@@ -35,7 +35,15 @@ public class pollServlet extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
-        request.getRequestDispatcher("CookieCheck").include(request, response);
+        Cookie[] cookies = request.getCookies();
+        for (int i = 0 ; cookies!=null && i < cookies.length ; i++) {
+            // if cookie is already exist forward to results servlet
+            if (cookies[i].getName().equals("username")) {
+                request.setAttribute("errMsg", "You have already voted, you can vote every 20 seconds");
+                doGet(request, response);
+                return;
+            }
+        }
         synchronized (lock) {
             String radio = request.getParameter("poll");
             // check if the client no choose one radio answer
@@ -63,8 +71,6 @@ public class pollServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
-        // include to CookieCheck to Check if Cookie is exists
-        request.getRequestDispatcher("CookieCheck").include(request, response);
         PrintWriter out = response.getWriter();
         // print the head of the html file
         request.getRequestDispatcher("head.html").include(request, response);
