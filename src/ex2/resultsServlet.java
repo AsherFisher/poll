@@ -20,6 +20,8 @@ public class resultsServlet extends HttpServlet {
     private ArrayList<String> poll;
     // results holding the vote results
     private HashMap<String,Integer> results;
+    // holding the error massage if throws IOException | ServletException
+    private String err;
 
     /**
      * doPost send the results of the poll to the client as a html file
@@ -60,6 +62,16 @@ public class resultsServlet extends HttpServlet {
      * @throws IOException IOException
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // check if error massage IOException | ServletException
+        if(err != null && !err.isEmpty()){
+            PrintWriter out = response.getWriter();
+            request.getRequestDispatcher("head.html").include(request, response);
+            out.println("<div class = \"err\">"+ err +"</div>");
+            out.println("</body></html>");
+            out.close();
+            return;
+        }
+
         doPost(request, response);
     }
 
@@ -72,5 +84,7 @@ public class resultsServlet extends HttpServlet {
         super.init(config);
         poll = (ArrayList<String>) config.getServletContext().getAttribute("poll");
         results = (HashMap<String,Integer>) config.getServletContext().getAttribute("results");
+        err = (String) config.getServletContext().getAttribute("err");
+
     }
 }

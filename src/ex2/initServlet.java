@@ -58,9 +58,12 @@ public class initServlet extends HttpServlet {
         String fileName = config.getInitParameter("fileName");
         //ArrayList for the input of the file
         ArrayList<String> pollList = new ArrayList<String>();
+        BufferedReader file = null;
+
         try {
             URL url = config.getServletContext().getResource(fileName);
-            BufferedReader file = new BufferedReader(new InputStreamReader(url.openStream()));
+            file = new BufferedReader(new InputStreamReader(url.openStream()));
+
             String s = new String();
             while ((s = file.readLine()) != null) {
                 pollList.add(s);
@@ -73,10 +76,15 @@ public class initServlet extends HttpServlet {
             //push to the global of servlets
             config.getServletContext().setAttribute("poll", pollList);
             file.close();
-        } catch (IOException | ServletException e){
+        } catch (IOException | NullPointerException | ServletException e){
             String Error = e.getMessage() + " - bad input";
             config.getServletContext().setAttribute("err", Error);
             log(e.getMessage());
+            try {
+                file.close();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
         }
 
         // HashMap for counting the votes

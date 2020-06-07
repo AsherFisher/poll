@@ -21,8 +21,6 @@ public class pollServlet extends HttpServlet {
     private ArrayList<String> poll;
     // a lock for synchronized the vote section
     private final String lock = "locked";
-    // holding the error massage if throws IOException | ServletException
-    private String err;
     // results holding the vote results
     private HashMap<String,Integer> results;
 
@@ -74,13 +72,6 @@ public class pollServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         // print the head of the html file
         request.getRequestDispatcher("head.html").include(request, response);
-        // check if error massage IOException | ServletException
-        if(err != null && !err.isEmpty()){
-            out.println("<div class = \"err\">"+ err +"</div>");
-            out.println("</body></html>");
-            out.close();
-            return;
-        }
         // print form
         out.println("<form method = \"post\" action=\"poll\">");
         out.println("<h2>"+poll.get(0)+"</h2>");
@@ -106,7 +97,6 @@ public class pollServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         poll = (ArrayList<String>) config.getServletContext().getAttribute("poll");
-        err = (String) config.getServletContext().getAttribute("err");
         results = (HashMap<String,Integer>) config.getServletContext().getAttribute("results");
     }
 }
